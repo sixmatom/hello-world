@@ -92,6 +92,7 @@ function makeBooking(name, timeStart, timeEnd, email, calendar) {
     }),
     success:function (data) {
       getBookingByRoom(name);
+      createCalendarEvents();
       
     }, 
     
