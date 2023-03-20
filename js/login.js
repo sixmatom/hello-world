@@ -16,12 +16,13 @@ $(document).ready(function () {
                 password: password,
                 }),
             success: function (data) {
-                getRooms();
+               
                 var token = data.token;
                 
 
                 // Store the token in local storage
                 localStorage.setItem("jwtToken", token);
+                getRooms("test1");
                 window.location.href = "../home.html";
             },
             error: function (xhr, status, error) {
