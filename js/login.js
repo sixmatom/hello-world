@@ -21,7 +21,7 @@ $(document).ready(function () {
 
                 // Store the token in local storage
                 localStorage.setItem("jwtToken", token);
-                window.location.href = "../static/home.html";
+                window.location.href = "../home.html";
             },
             error: function (xhr, status, error) {
                 const errorMessage = "Error: " + xhr.responseJSON.error;

@@ -1,6 +1,6 @@
 function logout() {
     localStorage.removeItem("jwtToken");
-    window.location.href = "../static/index.html";
+    window.location.href = "../index.html";
     
 }
 
@@ -8,7 +8,7 @@ if (localStorage.getItem("jwtToken")) {
     checkTokenExpiration(localStorage.getItem("jwtToken"));
     $('#logoutButton').click(logout);
 } else {
-    window.location.href = "../static/index.html";
+    window.location.href = "../index.html";
 }
 
 function checkTokenExpiration(token) {
@@ -25,7 +25,7 @@ function checkTokenExpiration(token) {
     if (timeDifference <= 0) {
       // Token has expired, remove from local storage
       localStorage.removeItem('jwtToken');
-      window.location.href = "../static/index.html";
+      window.location.href = "../index.html";
 
     }
   }
