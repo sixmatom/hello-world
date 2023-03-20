@@ -13,6 +13,7 @@ function getRooms (name){
   success: function (data) {
     // Do something with the booking data, e.g. create calendar events
     const rooms = data
+    console.log(rooms)
     localStorage.setItem("Rooms",JSON.stringify(rooms));
   },
   error: function (jqXHR, textStatus, errorThrown) {
