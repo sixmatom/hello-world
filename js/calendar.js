@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
     });
   });
-  
+  getRooms();
   var rooms = JSON.parse(localStorage.getItem("Rooms"));    
   var events = createCalendarEvents(rooms);
   var calendarEl = document.getElementById('calendar');
@@ -103,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   
     var events = [];
+    
   
     rooms.forEach(function(room) {
       getBookingByRoom(room.name);
