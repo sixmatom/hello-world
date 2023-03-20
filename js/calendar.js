@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   
     var events = [];
+    
   
     rooms.forEach(function(room) {
       getBookingByRoom(room.name);
