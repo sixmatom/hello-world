@@ -16,6 +16,7 @@ $(document).ready(function () {
                 password: password,
                 }),
             success: function (data) {
+                getRooms();
                 var token = data.token;
                 
 
