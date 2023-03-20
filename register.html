@@ -1,6 +1,6 @@
 <!DOCTYPE html><!--  This site was created in Webflow. https://www.webflow.com  -->
 <!--  Last Published: Thu Mar 16 2023 15:32:44 GMT+0000 (Coordinated Universal Time)  -->
-<html data-wf-page="63eb9acfbb5d8349b9c43d52" data-wf-site="63eb9acfbb5d83b1bbc43d51">
+<html data-wf-page="6411a00856d35f682179d4b0" data-wf-site="63eb9acfbb5d83b1bbc43d51">
 
 <head>
   <meta charset="utf-8">
@@ -36,6 +36,36 @@
 </head>
 
 <body>
+  <div class="black_big">
+    <div class="popup_box"><img src="images/logo_login.png" loading="lazy" alt="" class="codegorilla-logo">
+      <a href="../static/index.html" class="exit_button w-button">X</a>
+      <h2 class="registrate_text">Registratie</h2>
+      <div class="w-form">
+        <form id="register-form" name="email-form-2" data-name="Email Form 2" method="get"><label for="firstName"
+            class="credential_field">First name</label><input type="text" class="credential_box w-input" maxlength="256"
+            name="firstName" data-name="firstName" placeholder="Enter your name" id="firstName" required=""><label
+            for="lastName" class="credential_field">Last name</label><input type="text" class="credential_box w-input"
+            maxlength="256" name="lastName" data-name="lastName" placeholder="Enter your last name" id="lastName"
+            required=""><label for="email" class="credential_field">Email</label><input type="email"
+            class="credential_box w-input" maxlength="256" name="email" data-name="email" placeholder="Enter your email"
+            id="email" required=""><label for="password-3" class="credential_field">Password</label><input
+            type="password" class="credential_box w-input" maxlength="256" name="password" data-name="password"
+            placeholder="Enter a password" id="password" required=""><label for="company"
+            class="credential_field">Company</label>
+          <select id="company" name="company" data-name="company" required="" class="company_dropdown w-select">
+            <option value="CodeGorilla">CodeGorilla</option>
+            <option value="Alyx">Alyx</option>
+          </select><input type="submit" value="Aanmaken" data-wait="Please wait..." class="submit_button w-button">
+        </form>
+        <div class="w-form-done">
+          <div>Thank you! Your submission has been received!</div>
+        </div>
+        <div class="w-form-fail">
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="background wf-section">
     <div class="logo w-container">
       <div class="div-block"><img src="images/logo_login.png" loading="lazy" alt="" class="codegorilla_logo"></div>
@@ -43,13 +73,14 @@
     <div class="login_wrapper w-container">
       <div class="login-blok-plaatje">
         <div class="form-block w-form">
-          <form id="login-form" name="email-form" data-name="Email Form" method="get" class="form_wrapper_login"><label
-              for="name" class="field-label username">Username</label><label for="email"
+          <form id="email-form" name="email-form" data-name="Email Form" method="get" class="form_wrapper_login">
+            <label for="name" class="field-label username">Username</label><label for="username"
               class="field-label password">Password</label><input type="email" class="textfield username w-input"
-              maxlength="256" name="username" data-name="username" placeholder="Enter username" id="email"
-              required=""><input type="password" class="textfield password w-input" maxlength="256" name="password"
-              data-name="password" placeholder="Enter password" id="password" required=""><input type="submit"
-              value="Login" data-wait="Please wait..." class="button login w-button"></form>
+              maxlength="256" name="username" data-name="username" placeholder="" id="username"><input type="password"
+              class="textfield password w-input" maxlength="256" name="password" data-name="password" placeholder=""
+              id="password-2" required=""><input type="submit" value="Login" data-wait="Please wait..."
+              class="button login w-button"><input type="submit" value="register" data-wait="Please wait..."
+              class="button register w-button"></form>
           <div class="w-form-done">
             <div>Thank you! Your submission has been received!</div>
           </div>
@@ -57,7 +88,6 @@
             <div></div>
           </div>
         </div>
-        <a href="../static/register.html" class="register_button w-button">Register</a>
       </div>
     </div>
   </div>
@@ -68,7 +98,7 @@
   <!-- [if lte IE 9]><script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script><![endif] -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="js/config.js"></script>
-  <script src="js/login.js"></script>
+  <script src="js/register.js"></script>
 </body>
 
 </html>
