@@ -4,8 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
       event.preventDefault();
     });
   });
-  getRooms("test1")
-  var rooms = [];
+  
   var rooms = JSON.parse(localStorage.getItem("Rooms"));    
   var events = createCalendarEvents(rooms);
   var calendarEl = document.getElementById('calendar');

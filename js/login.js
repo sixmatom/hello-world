@@ -25,7 +25,7 @@ $(document).ready(function () {
 
                 getRooms("test1");
 
-                window.location.href = "../home.html";
+                // window.location.href = "../home.html";
             },
             error: function (xhr, status, error) {
                 const errorMessage = "Error: " + xhr.responseJSON.error;

@@ -28,7 +28,7 @@ console.log(firstName,lastName)
                 // Store the token in local storage
                 localStorage.setItem("jwtToken", token);
                 getRooms("test1")
-                window.location.href = "../home.html";
+                // window.location.href = "../home.html";
             },
             error: function (xhr, status, error) {
                 const errorMessage = "Error: " + xhr.responseJSON.error;
