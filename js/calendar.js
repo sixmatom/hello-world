@@ -29,6 +29,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
   hiddenDays: [0, 6],
   eventSources: [],
   datesSet: function(info) {
+    calendar.removeAllEvents();
     calendar.refetchEvents();
   },
     eventClick: function(info) {
@@ -71,10 +72,12 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
             if (action === 'reserve') {
               makeBooking(info.event.title, info.event.start, info.event.end, checkTokenUser(localStorage.getItem("jwtToken")), calendar)
               .then(function(data){
-                createCalendarEvents(rooms)
+                createCalendarEvents(rooms, info.start, info.end)
                 .then(function(events){
-                  calendar.removeAllEvents();
+                  
                  calendar.addEventSource(events);
+                 calendar.removeAllEvents();
+                 calendar.refetchEvents();
         });
               })
               .catch(function(error){
@@ -91,10 +94,12 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
           deleteBtn.addEventListener('click', function () {
             deleteBooking(info.event.id, info.event.title, checkTokenUser(localStorage.getItem("jwtToken")))
             .then(function(data){
-              createCalendarEvents(rooms)
+              createCalendarEvents(rooms, info.start, info.end)
               .then(function(events){
-                calendar.removeAllEvents();
+                
                calendar.addEventSource(events);
+               calendar.removeAllEvents();
+               calendar.refetchEvents();
       });
             })
             .catch(function(error){
