@@ -23,9 +23,15 @@ $(document).ready(function () {
                 // Store the token in local storage
                 localStorage.setItem("jwtToken", token);
 
-                getRooms("test1");
+                getRooms("test1")
+                .then(function(rooms){
+                    window.location.href = "../home.html";
+                })
+                .catch(function(error){
+                    console.log(error)
+                });
 
-                // window.location.href = "../home.html";
+                
             },
             error: function (xhr, status, error) {
                 const errorMessage = "Error: " + xhr.responseJSON.error;

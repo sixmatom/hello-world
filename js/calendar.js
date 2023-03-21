@@ -6,29 +6,30 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   
   var rooms = JSON.parse(localStorage.getItem("Rooms"));    
-  var events = createCalendarEvents(rooms);
+  
+ 
   var calendarEl = document.getElementById('calendar');
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    themeSystem: 'bootstrap5',
-    timeZone: 'local',
-    allDaySlot: false,
-    locale: navigator.language,
-    initialView: 'timeGridWeek',
-    selectable: true,
-    slotMinTime: '07:00:00',
-    slotMaxTime: '19:00:00',
-    events: events,
-    hiddenDays: [0, 6],
-    eventSources: [
-
-    ],
-    datesSet: function(info) {
-      var startDate = info.start;
-      var endDate = info.end;
-      var events = createCalendarEvents(rooms, startDate, endDate);
-      calendar.removeAllEvents();
-      calendar.addEventSource(events);
-    },
+var calendar = new FullCalendar.Calendar(calendarEl, {
+  themeSystem: 'bootstrap5',
+  timeZone: 'local',
+  allDaySlot: false,
+  locale: navigator.language,
+  initialView: 'timeGridWeek',
+  selectable: true,
+  slotMinTime: '07:00:00',
+  slotMaxTime: '19:00:00',
+  events: function(info, successCallback, failureCallback) {
+    createCalendarEvents(rooms, info.start, info.end).then(function(events) {
+      successCallback(events);
+    }).catch(function(error) {
+      failureCallback(error);
+    });
+  },
+  hiddenDays: [0, 6],
+  eventSources: [],
+  datesSet: function(info) {
+    calendar.refetchEvents();
+  },
     eventClick: function(info) {
             
         var modalId = 'modal-' + info.event.id; // Add booking ID to modal ID
@@ -65,22 +66,39 @@ document.addEventListener('DOMContentLoaded', function () {
         var reserveBtn = modal.querySelector(`#${reserveBtnId}`);
         if (reserveBtn) {
           reserveBtn.addEventListener('click', function () {
-            // Check if this button is for an available slot or a booking
             var action = this.dataset.action;
             if (action === 'reserve') {
-              makeBooking(info.event.title, info.event.start, info.event.end, checkTokenUser(localStorage.getItem("jwtToken")), calendar);
-              console.log('Reserve button clicked for an available slot');
+              makeBooking(info.event.title, info.event.start, info.event.end, checkTokenUser(localStorage.getItem("jwtToken")), calendar)
+              .then(function(data){
+                createCalendarEvents(rooms)
+                .then(function(events){
+                  calendar.removeAllEvents();
+                 calendar.addEventSource(events);
+        });
+              })
+              .catch(function(error){
+                console.log(error)
+              })
             }
             modalInstance.hide();
             modal.remove();
-          });
-        }
+          });        
+            }
       
         var deleteBtn = modal.querySelector(`#${deleteBtnId}`);
         if (deleteBtn) {
           deleteBtn.addEventListener('click', function () {
-            deleteBooking(info.event.id, info.event.title, checkTokenUser(localStorage.getItem("jwtToken")));
-            console.log('Delete button clicked');
+            deleteBooking(info.event.id, info.event.title, checkTokenUser(localStorage.getItem("jwtToken")))
+            .then(function(data){
+              createCalendarEvents(rooms)
+              .then(function(events){
+                calendar.removeAllEvents();
+               calendar.addEventSource(events);
+      });
+            })
+            .catch(function(error){
+              console.log(error)
+            });
             modalInstance.hide();
             modal.remove();
           });
@@ -96,6 +114,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   
   function createCalendarEvents(rooms, startDate, endDate) {
+    return new Promise(function(resolve, reject) {
     var businessHours = {
       start: '07:00', // your business hours
       end: '19:00',
@@ -106,7 +125,11 @@ document.addEventListener('DOMContentLoaded', function () {
     
   
     rooms.forEach(function(room) {
-      getBookingByRoom(room.name);
+      getBookingByRoom(room.name)
+      .then(function(data) {})
+      .catch(function(error){
+        console.log(error)
+      })
       bookings = JSON.parse(localStorage.getItem(room.name));      
       if (bookings === null) {
         bookings = [];
@@ -160,9 +183,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       
       });
-    
-  
-    return events;
+      resolve(events);
+    });
   }
+  
 
   
