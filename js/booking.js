@@ -11,8 +11,8 @@ function getRooms(name) {
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("jwtToken"));
       },
       success: function(data) {
-        // const rooms = data;
-        localStorage.setItem("Rooms", JSON.stringify(data));
+         const rooms = data.list;
+        localStorage.setItem("Rooms", JSON.stringify(rooms));
         resolve(data);
         
       },
@@ -129,7 +129,6 @@ function deleteBooking(bookingToken, roomName, userEmail) {
 },
   
   error: function (xhr, status, error) {
-    console.log(xhr.responseText);
     reject(xhr.responseText)
   }
 });
