@@ -1,25 +1,27 @@
 localStorage.getItem("jwtToken")
-function getRooms (name){
-    
-  $.ajax({
-  url: BASE_URL + "/getRooms",
-  type: "POST",
-  data: {
-    name:name
-  },
-  beforeSend: function (xhr) {
-    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("jwtToken"));
-  },
-  success: function (data) {
-    // Do something with the booking data, e.g. create calendar events
-    const rooms = data
-    localStorage.setItem("Rooms",JSON.stringify(rooms));
-    window.location.href = "../home.html";
-  },
-  error: function (jqXHR, textStatus, errorThrown) {
-    console.error('Error:', textStatus, errorThrown);
-  }
-});
+function getRooms(name) {
+  return new Promise(function(resolve, reject) {
+    $.ajax({
+      url: BASE_URL + "/getRooms",
+      type: "POST",
+      data: {
+        name: name
+      },
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("jwtToken"));
+      },
+      success: function(data) {
+        // const rooms = data;
+        localStorage.setItem("Rooms", JSON.stringify(data));
+        resolve(data);
+        
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error('Error:', textStatus, errorThrown);
+        reject(errorThrown);
+      }
+    });
+  });
 }
 
   
@@ -42,65 +44,68 @@ function getBooking (){
   });
 }
 
-function getBookingByRoom (roomName){
-  
-  
-  $.ajax({
-  url: BASE_URL + "/getBookingByRoom",
-  type: "POST",
-  data: {
-    roomName:roomName
-  },
-  beforeSend: function (xhr) {
-    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("jwtToken"));
-  },
-
-  success: function (data) {
-    localStorage.setItem(roomName,JSON.stringify(data));
-    
-    // Do something with the booking data, e.g. create calendar events
-   
-  },
-  error: function (jqXHR, textStatus, errorThrown) {
-    console.error('Error:', textStatus, errorThrown);
-  }
-});
+function getBookingByRoom(roomName) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: BASE_URL + "/getBookingByRoom",
+      type: "POST",
+      data: {
+        roomName: roomName
+      },
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("jwtToken"));
+      },
+      success: function(data) {
+        localStorage.setItem(roomName, JSON.stringify(data));
+        resolve(data);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.error('Error:', textStatus, errorThrown);
+        reject(errorThrown);
+      }
+    });
+  });
 }
 
 function makeBooking(name, timeStart, timeEnd, email, calendar) {
-  checkTokenExpiration(localStorage.getItem("jwtToken"))
-  $.ajax({
-    url: BASE_URL + "/makeBooking",
-    type: "POST",
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("jwtToken"));
-    },
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    
-    data: JSON.stringify({
-      "room": {
-        "name": name
+  return new Promise((resolve, reject) => {
+    checkTokenExpiration(localStorage.getItem("jwtToken"))
+    $.ajax({
+      url: BASE_URL + "/makeBooking",
+      type: "POST",
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("jwtToken"));
       },
-      "timeStart": timeStart,
-      "timeEnd": timeEnd,
-      "userEmail":email,
-      "user": {
-        "email": email
+      headers: {
+        'Content-Type': 'application/json'
+      },
+
+      data: JSON.stringify({
+        "room": {
+          "name": name
+        },
+        "timeStart": timeStart,
+        "timeEnd": timeEnd,
+        "userEmail": email,
+        "user": {
+          "email": email
+        }
+      }),
+      success: function(data) {
+        getBookingByRoom(name).then(function() {
+        resolve(data);
+      })
+    },
+
+      error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+        reject(error);
       }
-    }),
-    success:function (data) {
-      getBookingByRoom(name);
-      
-    }, 
-    
-    error: function (xhr, status, error) {
-      console.log(xhr.responseText);
-  } 
+    });
   });
 }
 function deleteBooking(bookingToken, roomName, userEmail) {
+  return new Promise((resolve, reject) => {
   checkTokenExpiration(localStorage.getItem("jwtToken"))
   $.ajax({
   url: BASE_URL + "/cancelBooking",
@@ -113,19 +118,19 @@ function deleteBooking(bookingToken, roomName, userEmail) {
     email: userEmail,
     token : bookingToken
   },
-  
+ 
       
   success:function (data) {
-        
-    getBookingByRoom(roomName)
-  
+    getBookingByRoom(roomName).then(function() {
+      resolve(data);
+    })
 },
   
   error: function (xhr, status, error) {
     console.log(xhr.responseText);
-    
+    reject(xhr.responseText)
   }
-  
+});
 });
 }
 
