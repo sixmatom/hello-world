@@ -56,7 +56,7 @@ function getBookingByRoom(roomName) {
         xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("jwtToken"));
       },
       success: function(data) {
-        localStorage.setItem(roomName, JSON.stringify(data));
+        localStorage.setItem(roomName, JSON.stringify(data.list));
         resolve(data);
       },
       error: function(jqXHR, textStatus, errorThrown) {
