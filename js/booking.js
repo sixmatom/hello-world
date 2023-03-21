@@ -101,7 +101,9 @@ function makeBooking(name, timeStart, timeEnd, email, calendar) {
         console.log(xhr.responseText);
         reject(error);
       }
+
     });
+
   });
 }
 function deleteBooking(bookingToken, roomName, userEmail) {
