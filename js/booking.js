@@ -17,7 +17,7 @@ function getRooms(name) {
         
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        console.error('Error:', textStatus, errorThrown);
+        // console.error('Error:', textStatus, errorThrown);
         reject(errorThrown);
       }
     });
@@ -39,7 +39,7 @@ function getBooking (){
       localStorage.setItem("Bookings", data);
     },
     error: function (jqXHR, textStatus, errorThrown) {
-      console.error('Error:', textStatus, errorThrown);
+      // console.error('Error:', textStatus, errorThrown);
     }
   });
 }
@@ -60,7 +60,7 @@ function getBookingByRoom(roomName) {
         resolve(data);
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        console.error('Error:', textStatus, errorThrown);
+        // console.error('Error:', textStatus, errorThrown);
         reject(errorThrown);
       }
     });
@@ -98,8 +98,8 @@ function makeBooking(name, timeStart, timeEnd, email, calendar) {
     },
 
       error: function(xhr, status, error) {
-        console.log(xhr.responseText);
-        reject(error);
+        // console.log(xhr.responseText);
+        reject(xhr.responseText);
       }
 
     });
