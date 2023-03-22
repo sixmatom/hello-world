@@ -106,8 +106,8 @@ modalFooter.classList.add('text-end');
                  calendar.addEventSource(events);
                  calendar.removeAllEvents();
                  calendar.refetchEvents();
-        });
-              })
+        })
+            })
               .catch(function(error){
                 console.log(error)
                 var errorModal = document.createElement("div");
@@ -119,6 +119,8 @@ modalFooter.classList.add('text-end');
                   </div>
                 `;
                 document.body.appendChild(errorModal);
+                console.log(errorModal); // add this line
+
                 var closeModal = errorModal.querySelector(".close");
                 closeModal.addEventListener("click", function() {
                   errorModal.remove();
@@ -143,29 +145,31 @@ modalFooter.classList.add('text-end');
                     calendar.addEventSource(events);
                     calendar.removeAllEvents();
                     calendar.refetchEvents();
-                  });
-                  modalInstance.hide();
-                  modal.remove();
+                  })
                 })
                 .catch(function(error){
-                  
                   var errorModal = document.createElement("div");
                   errorModal.className = "modal";
+                  errorModal.addEventListener('click', function () {
+                    errorModal.remove();
+                  });
+                  
                   errorModal.innerHTML = `
+                  <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                      <span class="close">&times;</span>
-                      <p>${error.message}</p>
+                        <p>${error}</p>
                     </div>
                   `;
-                  document.body.appendChild(errorModal);
-                  var closeModal = errorModal.querySelector(".close");
-                  closeModal.addEventListener("click", function() {
-                    errorModal.remove();
-                    // console.log(error)
-                
-                  });
+                  document.body.appendChild(errorModal); 
+                  
+                  errorModal.style.display = "block";
+                  
                 });
+                
+                modalInstance.hide();
+                
               });
+             
             }
           }
           

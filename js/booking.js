@@ -98,7 +98,7 @@ function makeBooking(name, timeStart, timeEnd, email, calendar) {
     },
 
       error: function(xhr, status, error) {
-        // console.log(xhr.responseText);
+         console.log(xhr.responseText);
         reject(xhr.responseText);
       }
 
@@ -129,6 +129,7 @@ function deleteBooking(bookingToken, roomName, userEmail) {
 },
   
   error: function (xhr, status, error) {
+    console.log(xhr.responseText);
     reject(xhr.responseText)
   }
 });
