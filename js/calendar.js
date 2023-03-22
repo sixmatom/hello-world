@@ -108,27 +108,24 @@ modalFooter.classList.add('text-end');
                  calendar.refetchEvents();
         })
             })
-              .catch(function(error){
-                console.log(error)
-                var errorModal = document.createElement("div");
-                errorModal.className = "modal";
-                errorModal.innerHTML = `
-                  <div class="modal-content">
-                    <span class="close">&times;</span>
-                    <p>${error.message}</p>
-                  </div>
-                `;
-                document.body.appendChild(errorModal);
-                console.log(errorModal); // add this line
-
-                var closeModal = errorModal.querySelector(".close");
-                closeModal.addEventListener("click", function() {
-                  errorModal.remove();
-                  // console.log(error)
+            .catch(function(error){
+              var errorModal = document.createElement("div");
+              errorModal.className = "modal";
+              errorModal.addEventListener('click', function () {
+                errorModal.remove();
+              });
               
-                });
-                
-              })
+              errorModal.innerHTML = `
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <p>${error}</p>
+                </div>
+              `;
+              document.body.appendChild(errorModal); 
+              
+              errorModal.style.display = "block";
+              
+            });
             
             modalInstance.hide();
             modal.remove();
@@ -167,7 +164,7 @@ modalFooter.classList.add('text-end');
                 });
                 
                 modalInstance.hide();
-                
+                modal.remove();
               });
              
             }
