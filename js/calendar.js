@@ -89,27 +89,39 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
           });        
             }
       
-        var deleteBtn = modal.querySelector(`#${deleteBtnId}`);
-        if (deleteBtn) {
-          deleteBtn.addEventListener('click', function () {
-            deleteBooking(info.event.id, info.event.title, checkTokenUser(localStorage.getItem("jwtToken")))
-            .then(function(data){
-              createCalendarEvents(rooms, info.start, info.end)
-              .then(function(events){
-                
-               calendar.addEventSource(events);
-               calendar.removeAllEvents();
-               calendar.refetchEvents();
-      });
-            })
-            .catch(function(error){
-              console.log(error)
-            });
-            modalInstance.hide();
-            modal.remove();
-          });
-        }
-      }
+            var deleteBtn = modal.querySelector(`#${deleteBtnId}`);
+            if (deleteBtn) {
+              deleteBtn.addEventListener('click', function () {
+                deleteBooking(info.event.id, info.event.title, checkTokenUser(localStorage.getItem("jwtToken")))
+                .then(function(data){
+                  createCalendarEvents(rooms, info.start, info.end)
+                  .then(function(events){
+                    calendar.addEventSource(events);
+                    calendar.removeAllEvents();
+                    calendar.refetchEvents();
+                  });
+                  modalInstance.hide();
+                  modal.remove();
+                })
+                .catch(function(error){
+                  console.log(error)
+                  var errorModal = document.createElement("div");
+                  errorModal.className = "modal";
+                  errorModal.innerHTML = `
+                    <div class="modal-content">
+                      <span class="close">&times;</span>
+                      <p>${error.message}</p>
+                    </div>
+                  `;
+                  document.body.appendChild(errorModal);
+                  var closeModal = errorModal.querySelector(".close");
+                  closeModal.addEventListener("click", function() {
+                    errorModal.remove();
+                  });
+                });
+              });
+            }
+          }
           
       
     });
