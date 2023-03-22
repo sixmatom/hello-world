@@ -1,46 +1,48 @@
-$(document).ready(function () {
-    $("#login-form").submit(function (e) {
-        e.preventDefault();
+$("#login-form").submit(function (e) {
+    e.preventDefault();
 
-        var email = $("#email").val();
-        var password = $("#password").val();
+    var email = $("#email").val();
+    var password = $("#password").val();
 
-        $.ajax({
-            url: BASE_URL + "/test/authenticate",
-            type: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-              },
-            data: JSON.stringify({
-                email: email,
-                password: password,
-                }),
-            success: function (data) {
-               
-                var token = data.token;
-                
+    $.ajax({
+        url: BASE_URL + "/test/authenticate",
+        type: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        data: JSON.stringify({
+            email: email,
+            password: password,
+            }),
+        success: function (data) {
+           
+            var token = data.token;
+            
+            // Store the token in local storage
+            localStorage.setItem("jwtToken", token);
 
-                // Store the token in local storage
-                localStorage.setItem("jwtToken", token);
-
-                getRooms("test1")
-                .then(function(rooms){
-                    window.location.href = "../home.html";
-                })
-                .catch(function(error){
-                    console.log(error)
+            getRooms("test1")
+            .then(function(rooms){
+                var promises = rooms.list.map(function(room) {
+                    return getBookingByRoom(room.name);
                 });
+                return Promise.all(promises);
+            })
+            .then(function(data) {
+                // Here you can process the data returned by getBookingByRoom
+                window.location.href = "../home.html";
+            })
+            .catch(function(error){
+                console.log(error)
+            });
+        },
+        error: function (xhr, status, error) {
+            const errorMessage = "Error: " + xhr.responseJSON.error;
+            const errorElement = document.querySelector(".w-form-fail > div");
+            errorElement.textContent = errorMessage;
 
-                
-            },
-            error: function (xhr, status, error) {
-                const errorMessage = "Error: " + xhr.responseJSON.error;
-                const errorElement = document.querySelector(".w-form-fail > div");
-                errorElement.textContent = errorMessage;
-
-                
-                console.log("Error: " + xhr.responseJSON.error );
-            }
-        });
+            
+            console.log("Error: " + xhr.responseJSON.error );
+        }
     });
 });
