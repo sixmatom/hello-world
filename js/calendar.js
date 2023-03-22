@@ -117,9 +117,10 @@ modalFooter.classList.add('text-end');
               
               errorModal.innerHTML = `
               <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <p>${error}</p>
-                </div>
+                    <div class="modal-content">
+                    <h5 class="modal-title">Error</h5>
+                        <p>${error}</p>
+                    </div>
               `;
               document.body.appendChild(errorModal); 
               
