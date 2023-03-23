@@ -35,6 +35,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
    eventMouseEnter: function(info) {
     originalBackgroundColor = info.el.style.backgroundColor;
     info.el.style.backgroundColor = 'lightgray'; // Change background color on hover
+    info.el.style.cursor = 'pointer';
     
   },
   eventMouseLeave: function(info) {
