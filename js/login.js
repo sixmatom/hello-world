@@ -22,7 +22,7 @@ $("#login-form").submit(function (e) {
             // Store the token in local storage
             localStorage.setItem("jwtToken", token);
 
-            getRooms("test1")
+            getRooms("Laan Corpus den Hoorn 106")
             .then(function(rooms){
                 var promises = rooms.list.map(function(room) {
                     return getBookingByRoom(room.name);
