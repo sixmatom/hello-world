@@ -32,6 +32,13 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     calendar.removeAllEvents();
     calendar.refetchEvents();
   },
+   eventMouseEnter: function(info) {
+    originalBackgroundColor = info.el.style.backgroundColor;
+    info.el.style.backgroundColor = 'lightgray'; // Change background color on hover
+  },
+  eventMouseLeave: function(info) {
+    info.el.style.backgroundColor = originalBackgroundColor; // Remove background color on hover-out
+  },
     eventClick: function(info) {        
       var modalId = 'modal-' + info.event.id;
       var modal = document.createElement('div');
