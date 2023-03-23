@@ -32,44 +32,72 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
     calendar.removeAllEvents();
     calendar.refetchEvents();
   },
-    eventClick: function(info) {
-            
-        var modalId = 'modal-' + info.event.id; // Add booking ID to modal ID
-        var reserveBtnId = 'reserveBtn-' + info.event.id; // Add booking ID to reserve button ID
-        var deleteBtnId = 'deleteBtn-' + info.event.id; // Add booking ID to delete button ID
+    eventClick: function(info) {        
+      var modalId = 'modal-' + info.event.id;
+      var modal = document.createElement('div');
+      modal.id = modalId;
+      modal.classList.add('modal', 'fade');
+    
+      var modalBody = document.createElement('div');
+      modalBody.classList.add('modal-body');
+    
+      if (info.event.extendedProps.type === 'open') {
+        var reserveBtnId = 'reserveBtn-' + info.event.id;
+        var reserveBtn = document.createElement('button');
+        reserveBtn.id = reserveBtnId;
+        reserveBtn.classList.add('btn', 'btn-primary');
+        reserveBtn.innerText = 'Reserve';
+        reserveBtn.addEventListener('click', function() {
+          // Handle click event for reserve meeting button
+        });
+        modalBody.appendChild(reserveBtn);
+      } else if (info.event.extendedProps.type === 'booked') {
+        var deleteBtnId = 'deleteBtn-' + info.event.id;
+        var deleteBtn = document.createElement('button');
+        deleteBtn.id = deleteBtnId;
+        deleteBtn.classList.add('btn', 'btn-danger');
+        deleteBtn.innerText = 'Delete';
+        deleteBtn.addEventListener('click', function() {
+          // Handle click event for delete button
+        });
+        modalBody.appendChild(deleteBtn);
+      }
+    
+      modal.innerHTML = `
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Booking Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Booked from ${moment(info.event.start).format('DD-MM-YYYY [Time:] HH:mm')} to ${moment(info.event.end).format('DD-MM-YYYY [Time:] HH:mm')}</p>
+        <div><p>booked by ${info.event.extendedProps.email}</p></div>
+      </div>
+      <div class="modal-footer">
+        ${info.event.type === 'open' ? modalBody.innerHTML : ''}
+        ${info.event.type === 'booked' ? modalBody.innerHTML : ''}
+      </div>
+    </div>
+  </div>
+`;
+
+var modalFooter = modal.querySelector('.modal-footer');
+modalFooter.appendChild(modalBody);
+modalFooter.classList.add('text-end');
+
       
-        var modal = document.createElement('div');
-        modal.id = modalId; // Set modal ID
-        modal.classList.add('modal', 'fade');
-        modal.innerHTML = `
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Booking Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <p>Booked from ${moment(info.event.start).format('DD-MM-YYYY [Time:] HH:mm')} to ${moment(info.event.end).format('DD-MM-YYYY [Time:] HH:mm')}</p>
-                <div><p>booked by ${info.event.extendedProps.email}</p></div>
-                </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-action="delete" id="${deleteBtnId}">Delete</button>
-                <button type="button" class="btn btn-primary" data-action="reserve" id="${reserveBtnId}">Reserve</button>
-              </div>
-            </div>
-          </div>
-        `;
-      
-        document.body.appendChild(modal);
-        var modalInstance = new bootstrap.Modal(modal);
-        modalInstance.show();
+    
+      document.body.appendChild(modal);
+      var modalInstance = new bootstrap.Modal(modal);
+      modalInstance.show();
+    
       
         // Add click event listener to the buttons
         var reserveBtn = modal.querySelector(`#${reserveBtnId}`);
         if (reserveBtn) {
           reserveBtn.addEventListener('click', function () {
-            var action = this.dataset.action;
-            if (action === 'reserve') {
+            
               makeBooking(info.event.title, info.event.start, info.event.end, checkTokenUser(localStorage.getItem("jwtToken")), calendar)
               .then(function(data){
                 createCalendarEvents(rooms, info.start, info.end)
@@ -78,38 +106,71 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
                  calendar.addEventSource(events);
                  calendar.removeAllEvents();
                  calendar.refetchEvents();
-        });
-              })
-              .catch(function(error){
-                console.log(error)
-              })
-            }
+        })
+            })
+            .catch(function(error){
+              var errorModal = document.createElement("div");
+              errorModal.className = "modal";
+              errorModal.addEventListener('click', function () {
+                errorModal.remove();
+              });
+              
+              errorModal.innerHTML = `
+              <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                    <h5 class="modal-title">Error</h5>
+                        <p>${error}</p>
+                    </div>
+              `;
+              document.body.appendChild(errorModal); 
+              
+              errorModal.style.display = "block";
+              
+            });
+            
             modalInstance.hide();
             modal.remove();
           });        
             }
       
-        var deleteBtn = modal.querySelector(`#${deleteBtnId}`);
-        if (deleteBtn) {
-          deleteBtn.addEventListener('click', function () {
-            deleteBooking(info.event.id, info.event.title, checkTokenUser(localStorage.getItem("jwtToken")))
-            .then(function(data){
-              createCalendarEvents(rooms, info.start, info.end)
-              .then(function(events){
+            var deleteBtn = modal.querySelector(`#${deleteBtnId}`);
+            if (deleteBtn) {
+              deleteBtn.addEventListener('click', function () {
+                deleteBooking(info.event.id, info.event.title, checkTokenUser(localStorage.getItem("jwtToken")))
+                .then(function(data){
+                  createCalendarEvents(rooms, info.start, info.end)
+                  .then(function(events){
+                    calendar.addEventSource(events);
+                    calendar.removeAllEvents();
+                    calendar.refetchEvents();
+                  })
+                })
+                .catch(function(error){
+                  var errorModal = document.createElement("div");
+                  errorModal.className = "modal";
+                  errorModal.addEventListener('click', function () {
+                    errorModal.remove();
+                  });
+                  
+                  errorModal.innerHTML = `
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                    <h5 class="modal-title">Error</h5>
+                        <p>${error}</p>
+                    </div>
+                  `;
+                  document.body.appendChild(errorModal); 
+                  
+                  errorModal.style.display = "block";
+                  
+                });
                 
-               calendar.addEventSource(events);
-               calendar.removeAllEvents();
-               calendar.refetchEvents();
-      });
-            })
-            .catch(function(error){
-              console.log(error)
-            });
-            modalInstance.hide();
-            modal.remove();
-          });
-        }
-      }
+                modalInstance.hide();
+                modal.remove();
+              });
+             
+            }
+          }
           
       
     });
@@ -158,9 +219,10 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
               }
             });
   
-            if (!isBooked) {
+             if (!isBooked) {
               events.push({
                 title: room.name,
+                type: "open",
                 start: eventStart,
                 end: eventEnd,
                 backgroundColor: '#008000',
@@ -177,6 +239,7 @@ var calendar = new FullCalendar.Calendar(calendarEl, {
               email: booking.userEmail,
               id: booking.token,
               title: room.name,
+              type:"booked",
               start: booking.timeStart,
               end: booking.timeEnd,
               backgroundColor:  '#FF0000',
