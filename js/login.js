@@ -3,7 +3,8 @@ $("#login-form").submit(function (e) {
 
     var email = $("#email").val();
     var password = $("#password").val();
-
+    const errorElement = document.querySelector(".w-form-fail > div");
+            errorElement.textContent = "waiting for login";
     $.ajax({
         url: BASE_URL + "/test/authenticate",
         type: "POST",
