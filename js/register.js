@@ -22,25 +22,13 @@ console.log(firstName,lastName)
                 company: company
             }),
             success: function (data) {
-           
                 var token = data.token;
                 
+
                 // Store the token in local storage
                 localStorage.setItem("jwtToken", token);
-    
-                getRooms("Laan Corpus den Hoorn 106")
-                .then(function(rooms){
-                    var promises = rooms.list.map(function(room) {
-                        return getBookingByRoom(room.name);
-                    });
-                    return Promise.all(promises);
-                })
-                .then(function(data) {
-                    // Here you can process the data returned by getBookingByRoom
-                    window.location.href = "../home.html";
-                })
-                .catch(function(error){
-                    console.log(error)
+                getRooms("test1").then(function(){
+                window.location.href = "../home.html";
                 });
             },
             error: function (xhr, status, error) {
